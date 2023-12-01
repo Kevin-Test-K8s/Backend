@@ -1,0 +1,9 @@
+steps:
+  # Step 1: Check out your source code from GitHub
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/enanotg/Backend.git']
+
+  # Step 2: Build a Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/google-backend', '.']
+images: ['gcr.io/$PROJECT_ID/google-backend']
