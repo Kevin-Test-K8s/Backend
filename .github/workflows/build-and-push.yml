@@ -26,4 +26,4 @@ jobs:
           context: .  # Path to the Dockerfile and context
           file: ./Dockerfile  # Path to the Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}/your-image-name:latest
+          tags: backend:latest
