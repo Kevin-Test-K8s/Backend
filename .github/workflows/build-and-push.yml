@@ -1,7 +1,6 @@
 name: Create and publish a Docker image
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -30,11 +29,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
           
-      # - name: Extract metadata (tags, labels) for Docker
-      #   id: meta
-      #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      #   with:
-      #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}         
 
       - name: Build and push Docker image
         id: push
@@ -42,13 +41,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/kevin-test-k8s/backend:main
-          # tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
-          # labels: ${{ steps.meta.outputs.labels }}
-      
-      # - name: Generate artifact attestation
-      #   uses: actions/attest-build-provenance@v2
-      #   with:
-      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-      #     subject-digest: ${{ steps.push.outputs.digest }}
-      #     push-to-registry: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
