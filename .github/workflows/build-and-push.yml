@@ -12,7 +12,6 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    environment: Env
     permissions:
       contents: read
       packages: write
@@ -42,7 +41,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: main
+          tags: final
           # labels: backend
       
       - name: Generate artifact attestation
