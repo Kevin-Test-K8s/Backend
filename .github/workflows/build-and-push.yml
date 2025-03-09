@@ -7,7 +7,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push-image:
@@ -18,10 +17,7 @@ jobs:
       attestations: write
       id-token: write
 
-    steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
-      
+    steps:    
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
@@ -33,6 +29,5 @@ jobs:
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          # context: .
           push: true
-          tags: ghcr.io/kevin-test-k8s/backend:main
+          tags: ${{ env.REGISTRY }}/kevin-test-k8s/backend:main
