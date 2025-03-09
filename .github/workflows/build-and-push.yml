@@ -35,4 +35,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/kevin-test-k8s/backend:main
+          tags: ghcr.io/kevin-test-k8s/backend:main
