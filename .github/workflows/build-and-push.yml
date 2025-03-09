@@ -42,12 +42,13 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/kevin-test-k8s/backend:main
+          # tags: ghcr.io/kevin-test-k8s/backend:main
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
           # labels: ${{ steps.meta.outputs.labels }}
       
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
