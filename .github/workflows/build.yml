@@ -24,4 +24,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+          tags: ${{ env.REGISTRY }}/backend:main
