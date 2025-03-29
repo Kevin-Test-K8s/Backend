@@ -18,7 +18,7 @@ jobs:
 
       - name: Set up kubectl
         run: |
-          az aks get-credentials --resource-group K8s --name k8s-terraform-cluster
+          az aks get-credentials --resource-group k8s-terraform --name k8s-terraform-cluster
           kubectl get nodes
 
       - name: Apply Kubernetes Deployment
