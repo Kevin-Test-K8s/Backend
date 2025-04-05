@@ -2,6 +2,11 @@
 
 VERSION_FILE="VERSION"
 
+# Initialize version file if it doesn't exist
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "1.0" > "$VERSION_FILE"
+fi
+
 # Read current version
 CURRENT_VERSION=$(cat "$VERSION_FILE")
 
