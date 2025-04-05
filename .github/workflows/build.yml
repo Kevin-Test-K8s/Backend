@@ -46,6 +46,4 @@ jobs:
             git add VERSION
             git commit -m "Bump version"
             git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-        env:
-            GH_TOKEN: ${{ secrets.GH_TOKEN }}
         
