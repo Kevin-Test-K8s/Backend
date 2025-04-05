@@ -43,7 +43,8 @@ jobs:
         run: |
             # Read and bump version (minor)
             CURRENT=$(cat VERSION)
-            NEXT=$(echo $CURRENT | awk -F. '{$NF+=1; OFS="."; print}')
+            IFS='.' read -r MAJOR MINOR <<< "$CURRENT"
+            NEXT="$MAJOR.$((MINOR + 1))"
             echo "$NEXT" > VERSION
         
             git config user.name "github-actions"
