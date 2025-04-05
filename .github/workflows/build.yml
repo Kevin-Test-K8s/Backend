@@ -51,5 +51,5 @@ jobs:
             git config user.email "github-actions@github.com"
             git add VERSION
             git commit -m "Bump version to $NEXT"
-            git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+            git push --force https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
         
