@@ -1,23 +1,13 @@
 #!/bin/bash
 
-VERSION_FILE="VERSION"
-
-# Initialize version file if it doesn't exist
-if [ ! -f "$VERSION_FILE" ]; then
-  echo "1.0" > "$VERSION_FILE"
+# Check if VERSION file exists; if not, create it with initial version 1.0
+if [ ! -f VERSION ]; then
+  echo "1.0" > VERSION
 fi
 
-# Read current version
-CURRENT_VERSION=$(cat "$VERSION_FILE")
+# Read the current version to use for this build
+VERSION=$(cat VERSION)
+echo "Using version: $VERSION"
 
-# Export to GitHub Actions
-echo "VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
-
-# Increment version for next build
-MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
-MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
-NEXT_MINOR=$((MINOR + 1))
-NEXT_VERSION="$MAJOR.$NEXT_MINOR"
-
-# Save next version to file
-echo "$NEXT_VERSION" > "$VERSION_FILE"
+# Export the version to be used in the Docker image tag
+echo "VERSION=$VERSION" >> $GITHUB_ENV

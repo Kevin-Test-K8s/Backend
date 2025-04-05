@@ -41,10 +41,14 @@ jobs:
 
       - name: Commit and push updated version
         run: |
+            # Read and bump version (minor)
+            CURRENT=$(cat VERSION)
+            NEXT=$(echo $CURRENT | awk -F. '{$NF+=1; OFS="."; print}')
+            echo "$NEXT" > VERSION
+        
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
             git add VERSION
-            git commit -m "Bump version"
-            git pull --rebase
+            git commit -m "Bump version to $NEXT"
             git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
         
