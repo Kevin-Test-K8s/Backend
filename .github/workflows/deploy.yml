@@ -20,22 +20,18 @@ jobs:
         run: |
           if [ -z "${{ github.event.inputs.version }}" ]; then
             echo "No version provided, checking latest..."
-
-            LATEST_VERSION=$(gh api -H "Accept: application/vnd.github.v3+json" \
+            VERSION=$(gh api -H "Accept: application/vnd.github.v3+json" \
               /orgs/Kevin-Test-K8s/packages/container/backend/versions \
-              | jq -r '[.[] | .metadata.container.tags[]?]' \
-              | grep -E '^[0-9]+\.[0-9]+$' \
-              | sort -V \
-              | tail -n 1)
-
-            echo "Using latest version: $LATEST_VERSION"
-            echo "VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+              | jq -r '.[].metadata.container.tags[]' | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
           else
-            echo "Using provided version: ${{ github.event.inputs.version }}"
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+            VERSION="${{ github.event.inputs.version }}"
           fi
+      
+          echo "Using version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      
 
       - name: Log in to Azure
         uses: azure/login@v1
