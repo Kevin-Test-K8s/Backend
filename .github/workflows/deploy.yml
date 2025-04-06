@@ -2,15 +2,32 @@ name: Deploy to AKS
 
 on:
   workflow_dispatch:
-  # workflow_run:
-  #   workflows: ["Create and publish a Docker image"]
-  #   types:
-  #     - completed
+    inputs:
+      version:
+        description: 'Select Image version to deploy: '
+        required: false
 
 jobs:
   Deploy-to-AKS:
     runs-on: ubuntu-latest
     steps:
+      - name: Set image version
+        id: set-version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            echo "No version provided, checking latest..."
+            LATEST_VERSION=$(gh api -H "Accept: application/vnd.github.v3+json" \
+              /orgs/Kevin-Test-K8s/packages/container/backend/versions \
+              | jq -r '.[0].metadata.container.tags[]' | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+            echo "Using latest version: $LATEST_VERSION"
+            echo "VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          else
+            echo "Using provided version: ${{ github.event.inputs.version }}"
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Log in to Azure
         uses: azure/login@v1
         with:
@@ -28,7 +45,7 @@ jobs:
 
       - name: Update Image in Deployment
         run: |
-          kubectl set image deployment/backend backend=ghcr.io/kevin-test-k8s/backend:main -n default
+          kubectl set image deployment/backend backend=ghcr.io/kevin-test-k8s/backend:$VERSION -n default
           kubectl rollout status deployment/backend -n default
 
       - name: Verify Deployment
