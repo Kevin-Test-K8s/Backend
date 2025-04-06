@@ -18,7 +18,8 @@ jobs:
             echo "No version provided, checking latest..."
             LATEST_VERSION=$(gh api -H "Accept: application/vnd.github.v3+json" \
               /orgs/Kevin-Test-K8s/packages/container/backend/versions \
-              | jq -r '.[0].metadata.container.tags[]' | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+              | jq -r '.[].metadata.container.tags[]' | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+              
             echo "Using latest version: $LATEST_VERSION"
             echo "VERSION=$LATEST_VERSION" >> $GITHUB_ENV
           else
@@ -27,6 +28,7 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
       - name: Log in to Azure
         uses: azure/login@v1
