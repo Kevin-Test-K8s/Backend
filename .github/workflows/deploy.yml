@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Select Image version to deploy: '
+        description: 'Select Image version to deploy (1.0.X): '
         required: false
 
 jobs:
