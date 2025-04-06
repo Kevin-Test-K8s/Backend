@@ -2,10 +2,10 @@ name: Deploy to AKS
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Create and publish a Docker image"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["Create and publish a Docker image"]
+  #   types:
+  #     - completed
 
 jobs:
   Deploy-to-AKS:
