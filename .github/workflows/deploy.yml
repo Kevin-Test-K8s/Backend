@@ -26,7 +26,7 @@ jobs:
           else
             VERSION="${{ github.event.inputs.version }}"
           fi
-
+      
           echo "Using version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
         env:
@@ -42,11 +42,20 @@ jobs:
           az aks get-credentials --resource-group k8s-terraform --name k8s-terraform-cluster
           kubectl get nodes
 
-      - name: Render deployment.yaml with selected version
+      - name: Create imagePullSecret for GitHub Container Registry
         run: |
-          sudo apt-get update && sudo apt-get install -y gettext
-          envsubst < k8s/deployment.yaml > k8s/deployment.rendered.yaml
-          cat k8s/deployment.rendered.yaml
+          kubectl get secret ghcr-secret -n default || \
+          kubectl create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GH_TOKEN }} \
+            --docker-email=no-reply@github.com \
+            -n default
+
+      - name: Render Kubernetes Manifest with selected version
+        run: |
+          sed "s|ghcr.io/kevin-test-k8s/backend:.*|ghcr.io/kevin-test-k8s/backend:${VERSION}|" \
+            k8s/deployment.yaml > k8s/deployment.rendered.yaml
 
       - name: Apply Kubernetes Deployment
         run: |
