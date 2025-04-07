@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/kevin-test-k8s/backend:1.0.0
+          image: ghcr.io/kevin-test-k8s/backend:${VERSION}
           ports:
             - containerPort: 80
       imagePullSecrets:
