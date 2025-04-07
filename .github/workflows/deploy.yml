@@ -22,7 +22,14 @@ jobs:
             echo "No version provided, checking latest..."
             VERSION=$(gh api -H "Accept: application/vnd.github.v3+json" \
               /orgs/Kevin-Test-K8s/packages/container/backend/versions \
-              | jq -r '.[].metadata.container.tags[]' | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+              | jq -r '.[].metadata.container.tags[]' \
+              | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+              | sort -V | tail -n 1)
+      
+            if [ -z "$VERSION" ]; then
+              echo "No valid version found. Falling back to 1.0.0"
+              VERSION="1.0.0"
+            fi
           else
             VERSION="${{ github.event.inputs.version }}"
           fi
@@ -31,6 +38,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      
 
       - name: Log in to Azure
         uses: azure/login@v1
